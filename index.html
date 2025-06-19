@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cuestionario: Llegada de los Nazis a Argentina</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #f8fafc;
+            color: #334155;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .header h1 {
+            color: #1e293b;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: #64748b;
+            font-size: 1.1rem;
+        }
+
+        .progress-container {
+            margin-bottom: 20px;
+        }
+
+        .progress-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background-color: #e2e8f0;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background-color: #3b82f6;
+            transition: width 0.3s ease;
+        }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .card-header {
+            padding: 24px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .question-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .question-number {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #1e293b;
+        }
+
+        .category-badge {
+            background-color: #dbeafe;
+            color: #1d4ed8;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        .question-text {
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: #1e293b;
+        }
+
+        .card-content {
+            padding: 24px;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .option {
+            display: flex;
+            align-items: center;
+            padding: 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .option:hover {
+            border-color: #3b82f6;
+            background-color: #f8fafc;
+        }
+
+        .option.selected {
+            border-color: #3b82f6;
+            background-color: #dbeafe;
+        }
+
+        .option input[type="radio"] {
+            margin-right: 12px;
+            transform: scale(1.2);
+        }
+
+        .option label {
+            cursor: pointer;
+            flex: 1;
+            font-weight: 500;
+        }
+
+        .btn {
+            background-color: #3b82f6;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+            width: 100%;
+        }
+
+        .btn:hover:not(:disabled) {
+            background-color: #2563eb;
+        }
+
+        .btn:disabled {
+            background-color: #94a3b8;
+            cursor: not-allowed;
+        }
+
+        .result {
+            display: none;
+        }
+
+        .result.show {
+            display: block;
+        }
+
+        .result-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .result-icon {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: white;
+        }
+
+        .result-icon.correct {
+            background-color: #10b981;
+        }
+
+        .result-icon.incorrect {
+            background-color: #ef4444;
+        }
+
+        .correct-answer {
+            background-color: #f0f9ff;
+            border: 1px solid #0ea5e9;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 16px;
+        }
+
+        .explanation {
+            background-color: #eff6ff;
+            border-left: 4px solid #3b82f6;
+            border-radius: 8px;
+            padding: 16px;
+        }
+
+        .final-results {
+            display: none;
+            text-align: center;
+        }
+
+        .final-results.show {
+            display: block;
+        }
+
+        .score-display {
+            font-size: 3rem;
+            font-weight: bold;
+            color: #3b82f6;
+            margin: 20px 0;
+        }
+
+        .score-percentage {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+        }
+
+        .score-message {
+            font-size: 1.1rem;
+            color: #64748b;
+            margin-bottom: 30px;
+            max-width: 400px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .current-score {
+            text-align: center;
+            margin-top: 20px;
+            color: #64748b;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .question-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Cuestionario: Nazis en Argentina</h1>
+            <p>Evalúa tus conocimientos sobre la llegada de criminales de guerra nazis a Argentina, la reunión del Luna Park y casos particulares de jerarcas</p>
+        </div>
+
+        <div class="progress-container">
+            <div class="progress-info">
+                <span class="question-counter">Pregunta <span id="current-q">1</span> de <span id="total-q">10</span></span>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress-fill"></div>
+            </div>
+        </div>
+
+        <div class="card" id="quiz-card">
+            <div class="card-header">
+                <div class="question-header">
+                    <div class="question-number" id="question-number">Pregunta 1</div>
+                    <div class="category-badge" id="category-badge">Contexto General</div>
+                </div>
+                <div class="question-text" id="question-text"></div>
+            </div>
+            <div class="card-content">
+                <div id="question-content">
+                    <div class="options" id="options-container"></div>
+                    <button class="btn" id="next-btn" onclick="handleNext()" disabled>Siguiente</button>
+                </div>
+
+                <div class="result" id="result-content">
+                    <div class="result-header">
+                        <div class="result-icon" id="result-icon"></div>
+                        <span id="result-text"></span>
+                    </div>
+                    <div class="correct-answer">
+                        <p><strong>Respuesta correcta:</strong></p>
+                        <p id="correct-answer-text"></p>
+                    </div>
+                    <div class="explanation">
+                        <p><strong>Explicación:</strong></p>
+                        <p id="explanation-text"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card final-results" id="final-results">
+            <div class="card-content">
+                <h2>¡Cuestionario Completado!</h2>
+                <p style="color: #64748b; margin-bottom: 20px;">Has respondido todas las preguntas sobre la llegada de los nazis a Argentina</p>
+                <div class="score-display" id="final-score">0/10</div>
+                <div class="score-percentage" id="score-percentage">Puntuación: 0%</div>
+                <div class="score-message" id="score-message"></div>
+                <button class="btn" onclick="resetQuiz()">🔄 Reiniciar Cuestionario</button>
+            </div>
+        </div>
+
+        <div class="current-score" id="current-score">
+            Puntuación actual: 0/0
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            {
+                id: 1,
+                category: "Contexto General",
+                question: "¿Cuál fue el nombre de las rutas de escape utilizadas por los nazis para llegar a Argentina?",
+                options: ["Operación Paperclip", "Las Ratlines (Rutas de las Ratas)", "Operación Bernhard", "Plan Cóndor"],
+                correct: 1,
+                explanation: "Las 'Ratlines' fueron las rutas de escape organizadas para ayudar a criminales de guerra nazis a huir de Europa hacia Sudamérica."
+            },
+            {
+                id: 2,
+                category: "Contexto General",
+                question: "¿Qué presidente argentino facilitó la entrada de nazis al país?",
+                options: ["Hipólito Yrigoyen", "Juan Domingo Perón", "Arturo Frondizi", "Marcelo T. de Alvear"],
+                correct: 1,
+                explanation: "Juan Domingo Perón, durante su presidencia, facilitó la inmigración de criminales de guerra nazis a Argentina."
+            },
+            {
+                id: 3,
+                category: "Luna Park",
+                question: "¿En qué año se realizó la famosa concentración nazi en el Luna Park de Buenos Aires?",
+                options: ["1938", "1940", "1942", "1945"],
+                correct: 0,
+                explanation: "El 10 de abril de 1938 se realizó una gran concentración nazi en el Luna Park, con más de 20,000 asistentes."
+            },
+            {
+                id: 4,
+                category: "Luna Park",
+                question: "¿Qué organización organizó el evento del Luna Park?",
+                options: ["Partido Nazi Argentino", "Federación de Entidades Democráticas Antinazis", "Unión Alemana de Gremios", "Auslands-Organisation (AO)"],
+                correct: 3,
+                explanation: "La Auslands-Organisation era la organización del Partido Nazi para alemanes en el extranjero."
+            },
+            {
+                id: 5,
+                category: "Jerarcas Nazis",
+                question: "¿Cuál fue el apodo de Josef Mengele en Argentina?",
+                options: ["El Carnicero", "El Ángel de la Muerte", "El Doctor", "El Alemán"],
+                correct: 1,
+                explanation: "Josef Mengele era conocido como 'El Ángel de la Muerte' por sus experimentos médicos en Auschwitz."
+            },
+            {
+                id: 6,
+                category: "Jerarcas Nazis",
+                question: "¿Dónde fue capturado Adolf Eichmann en Argentina?",
+                options: ["Buenos Aires", "Córdoba", "Bariloche", "Mendoza"],
+                correct: 0,
+                explanation: "Adolf Eichmann fue capturado por el Mossad en Buenos Aires en 1960, donde vivía bajo el nombre de Ricardo Klement."
+            },
+            {
+                id: 7,
+                category: "Jerarcas Nazis",
+                question: "¿Qué criminal de guerra nazi se estableció en Bariloche y nunca fue capturado?",
+                options: ["Adolf Eichmann", "Josef Mengele", "Erich Priebke", "Klaus Barbie"],
+                correct: 2,
+                explanation: "Erich Priebke vivió en Bariloche durante décadas hasta que fue extraditado a Italia en 1995."
+            },
+            {
+                id: 8,
+                category: "Operaciones",
+                question: "¿Qué organización ayudó a muchos nazis a escapar a través del Vaticano?",
+                options: ["Cruz Roja Internacional", "ODESSA", "Cáritas", "Todas las anteriores"],
+                correct: 3,
+                explanation: "Varias organizaciones, incluyendo redes en el Vaticano, la Cruz Roja y ODESSA, facilitaron el escape de nazis."
+            },
+            {
+                id: 9,
+                category: "Documentación",
+                question: "¿Qué tipo de documentos falsos utilizaban los nazis para ingresar a Argentina?",
+                options: ["Pasaportes de la Cruz Roja", "Documentos del Vaticano", "Cédulas de identidad falsas", "Todas las anteriores"],
+                correct: 3,
+                explanation: "Los nazis utilizaron diversos tipos de documentación falsa, incluyendo pasaportes de la Cruz Roja y documentos del Vaticano."
+            },
+            {
+                id: 10,
+                category: "Consecuencias",
+                question: "¿Cuántos criminales de guerra nazis se estima que llegaron a Argentina?",
+                options: ["Menos de 100", "Entre 300-500", "Entre 5,000-10,000", "Más de 50,000"],
+                correct: 2,
+                explanation: "Se estima que entre 5,000 y 10,000 criminales de guerra nazis llegaron a Argentina después de la Segunda Guerra Mundial."
+            }
+        ];
+
+        let currentQuestion = 0;
+        let selectedAnswer = null;
+        let score = 0;
+        let answers = [];
+        let showingResult = false;
+
+        function initQuiz() {
+            document.getElementById('total-q').textContent = questions.length;
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            const question = questions[currentQuestion];
+            
+            document.getElementById('current-q').textContent = currentQuestion + 1;
+            document.getElementById('question-number').textContent = `Pregunta ${currentQuestion + 1}`;
+            document.getElementById('category-badge').textContent = question.category;
+            document.getElementById('question-text').textContent = question.question;
+            
+            const optionsContainer = document.getElementById('options-container');
+            optionsContainer.innerHTML = '';
+            
+            question.options.forEach((option, index) => {
+                const optionDiv = document.createElement('div');
+                optionDiv.className = 'option';
+                optionDiv.onclick = () => selectAnswer(index);
+                
+                optionDiv.innerHTML = `
+                    <input type="radio" name="answer" value="${index}" id="option-${index}">
+                    <label for="option-${index}">${option}</label>
+                `;
+                
+                optionsContainer.appendChild(optionDiv);
+            });
+            
+            updateProgress();
+            updateCurrentScore();
+        }
+
+        function selectAnswer(index) {
+            selectedAnswer = index;
+            
+            document.querySelectorAll('.option').forEach(option => {
+                option.classList.remove('selected');
+            });
+            
+            document.querySelectorAll('.option')[index].classList.add('selected');
+            document.getElementById(`option-${index}`).checked = true;
+            document.getElementById('next-btn').disabled = false;
+        }
+
+        function handleNext() {
+            if (selectedAnswer === null) return;
+            
+            const question = questions[currentQuestion];
+            answers.push(selectedAnswer);
+            
+            if (selectedAnswer === question.correct) {
+                score++;
+            }
+            
+            showResult();
+        }
+
+        function showResult() {
+            const question = questions[currentQuestion];
+            const isCorrect = selectedAnswer === question.correct;
+            
+            document.getElementById('question-content').style.display = 'none';
+            document.getElementById('result-content').classList.add('show');
+            
+            const resultIcon = document.getElementById('result-icon');
+            const resultText = document.getElementById('result-text');
+            
+            if (isCorrect) {
+                resultIcon.classList.add('correct');
+                resultIcon.textContent = '✓';
+                resultText.textContent = '¡Correcto!';
+            } else {
+                resultIcon.classList.add('incorrect');
+                resultIcon.textContent = '✗';
+                resultText.textContent = 'Incorrecto';
+            }
+            
+            document.getElementById('correct-answer-text').textContent = question.options[question.correct];
+            document.getElementById('explanation-text').textContent = question.explanation;
+            
+            showingResult = true;
+            updateCurrentScore();
+            
+            setTimeout(() => {
+                if (currentQuestion < questions.length - 1) {
+                    nextQuestion();
+                } else {
+                    showFinalResults();
+                }
+            }, 4000);
+        }
+
+        function nextQuestion() {
+            currentQuestion++;
+            selectedAnswer = null;
+            showingResult = false;
+            
+            document.getElementById('question-content').style.display = 'block';
+            document.getElementById('result-content').classList.remove('show');
+            document.getElementById('result-icon').className = 'result-icon';
+            document.getElementById('next-btn').disabled = true;
+            
+            loadQuestion();
+        }
+
+        function showFinalResults() {
+            document.getElementById('quiz-card').style.display = 'none';
+            document.getElementById('final-results').classList.add('show');
+            document.getElementById('current-score').style.display = 'none';
+            
+            const percentage = Math.round((score / questions.length) * 100);
+            
+            document.getElementById('final-score').textContent = `${score}/${questions.length}`;
+            document.getElementById('score-percentage').textContent = `Puntuación: ${percentage}%`;
+            
+            let message = '';
+            if (percentage >= 90) message = '¡Excelente! Tienes un conocimiento profundo del tema.';
+            else if (percentage >= 70) message = '¡Muy bien! Tienes un buen conocimiento histórico.';
+            else if (percentage >= 50) message = 'Bien. Hay algunos aspectos que podrías repasar.';
+            else message = 'Te recomiendo estudiar más sobre este período histórico.';
+            
+            document.getElementById('score-message').textContent = message;
+        }
+
+        function resetQuiz() {
+            currentQuestion = 0;
+            selectedAnswer = null;
+            score = 0;
+            answers = [];
+            showingResult = false;
+            
+            document.getElementById('quiz-card').style.display = 'block';
+            document.getElementById('final-results').classList.remove('show');
+            document.getElementById('current-score').style.display = 'block';
+            document.getElementById('question-content').style.display = 'block';
+            document.getElementById('result-content').classList.remove('show');
+            
+            loadQuestion();
+        }
+
+        function updateProgress() {
+            const progress = ((currentQuestion + 1) / questions.length) * 100;
+            document.getElementById('progress-fill').style.width = progress + '%';
+        }
+
+        function updateCurrentScore() {
+            const questionsAnswered = showingResult ? currentQuestion + 1 : currentQuestion;
+            document.getElementById('current-score').textContent = `Puntuación actual: ${score}/${questionsAnswered}`;
+        }
+
+        // Inicializar el cuestionario cuando se carga la página
+        window.onload = initQuiz;
+    </script>
+</body>
+</html>
